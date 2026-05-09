@@ -9,6 +9,8 @@
 !.claude/skills/**
 !.claude/agents/
 !.claude/agents/**
+!.claude/rules/
+!.claude/rules/**
 !.claude/CLAUDE.md
 !mcp-servers/
 !mcp-servers/**

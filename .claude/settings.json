@@ -14,6 +14,28 @@
       "Bash(docker push *)",
       "Bash(git push *)",
       "Bash(* install *)"
+    ],
+    "deny": [
+      "mcp__claude_ai_Asana__authenticate",
+      "mcp__claude_ai_Asana__complete_authentication",
+      "mcp__claude_ai_Atlassian__authenticate",
+      "mcp__claude_ai_Atlassian__complete_authentication",
+      "mcp__claude_ai_Box__authenticate",
+      "mcp__claude_ai_Box__complete_authentication",
+      "mcp__claude_ai_Canva__authenticate",
+      "mcp__claude_ai_Canva__complete_authentication",
+      "mcp__claude_ai_Figma__authenticate",
+      "mcp__claude_ai_Figma__complete_authentication",
+      "mcp__claude_ai_HubSpot__authenticate",
+      "mcp__claude_ai_HubSpot__complete_authentication",
+      "mcp__claude_ai_Intercom__authenticate",
+      "mcp__claude_ai_Intercom__complete_authentication",
+      "mcp__claude_ai_Linear__authenticate",
+      "mcp__claude_ai_Linear__complete_authentication",
+      "mcp__claude_ai_Notion__authenticate",
+      "mcp__claude_ai_Notion__complete_authentication",
+      "mcp__claude_ai_monday_com__authenticate",
+      "mcp__claude_ai_monday_com__complete_authentication"
     ]
   },
   "model": "sonnet",
@@ -30,5 +52,17 @@
   "theme": "dark",
   "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
-  "voiceEnabled": true
+  "voiceEnabled": true,
+  "includeGitInstructions": false,
+  "respectGitignore": false,
+  "showThinkingSummaries": true,
+  "skillOverrides": {
+    "claude-api": "off",
+    "update-config": "off",
+    "init": "off",
+    "review": "off",
+    "keybindings-help": "off",
+    "fewer-permission-prompts": "off",
+    "security-review": "off"
+  }
 }
