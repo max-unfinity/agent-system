@@ -1,0 +1,34 @@
+{
+  "permissions": {
+    "allow": [
+      "Read",
+      "Bash(docker*)",
+      "WebFetch",
+      "WebSearch",
+      "Write(~/projects/**)",
+      "Edit(~/projects/**)",
+      "Write(~/mcp-servers/**)",
+      "Edit(~/mcp-servers/**)"
+    ],
+    "ask": [
+      "Bash(docker push *)",
+      "Bash(git push *)",
+      "Bash(* install *)"
+    ]
+  },
+  "model": "sonnet",
+  "statusLine": {
+    "type": "command",
+    "command": "bash ~/.claude/statusline-command.sh"
+  },
+  "effortLevel": "high",
+  "voice": {
+    "enabled": true,
+    "mode": "hold"
+  },
+  "skipDangerousModePermissionPrompt": true,
+  "theme": "dark",
+  "inputNeededNotifEnabled": true,
+  "agentPushNotifEnabled": true,
+  "voiceEnabled": true
+}

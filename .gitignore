@@ -1,0 +1,17 @@
+*
+
+!.gitignore
+!.tmux.conf
+!.claude/
+!.claude/settings.json
+!.claude/statusline-command.sh
+!.claude/skills/
+!.claude/skills/**
+!.claude/agents/
+!.claude/agents/**
+!.claude/CLAUDE.md
+!mcp-servers/
+!mcp-servers/**
+
+package-lock.json
+node_modules
