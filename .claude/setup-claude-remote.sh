@@ -54,8 +54,9 @@ Type=oneshot
 RemainAfterExit=yes
 User=${CURRENT_USER}
 Environment="HOME=/home/${CURRENT_USER}"
-WorkingDirectory=/tmp
-ExecStart=/usr/bin/tmux new-session -d -s ${TMUX_SESSION} "${CLAUDE_CMD} --verbose --remote-control"
+WorkingDirectory=${USER_HOME}
+ExecStart=/usr/bin/tmux new-session -d -s ${TMUX_SESSION} "${CLAUDE_CMD} --verbose --remote-control $(hostname -s)"
+ExecStartPost=/bin/sh -c 'sleep 3 && /usr/bin/tmux send-keys -t ${TMUX_SESSION} Enter'
 ExecStop=/usr/bin/tmux kill-session -t ${TMUX_SESSION}
 KillMode=none
 
