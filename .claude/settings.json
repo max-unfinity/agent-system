@@ -10,7 +10,10 @@
       "Write(~/projects/**)",
       "Edit(~/projects/**)",
       "Write(~/mcp-servers/**)",
-      "Edit(~/mcp-servers/**)"
+      "Edit(~/mcp-servers/**)",
+      "Skill(start-claude)",
+      "Bash(tmux *)",
+      "Bash(sleep *)"
     ],
     "deny": [
       "mcp__claude_ai_Asana__authenticate",
