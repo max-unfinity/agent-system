@@ -1,4 +1,6 @@
 {
+  "respectGitignore": false,
+  "includeGitInstructions": false,
   "permissions": {
     "allow": [
       "Read",
@@ -9,11 +11,6 @@
       "Edit(~/projects/**)",
       "Write(~/mcp-servers/**)",
       "Edit(~/mcp-servers/**)"
-    ],
-    "ask": [
-      "Bash(docker push *)",
-      "Bash(git push *)",
-      "Bash(* install *)"
     ],
     "deny": [
       "mcp__claude_ai_Asana__authenticate",
@@ -36,9 +33,23 @@
       "mcp__claude_ai_Notion__complete_authentication",
       "mcp__claude_ai_monday_com__authenticate",
       "mcp__claude_ai_monday_com__complete_authentication"
+    ],
+    "ask": [
+      "Bash(docker push *)",
+      "Bash(git push *)",
+      "Bash(* install *)"
     ]
   },
-  "model": "sonnet",
+  "model": "opus",
+  "skillOverrides": {
+    "claude-api": "off",
+    "update-config": "off",
+    "init": "off",
+    "review": "off",
+    "keybindings-help": "off",
+    "fewer-permission-prompts": "off",
+    "security-review": "off"
+  },
   "statusLine": {
     "type": "command",
     "command": "bash ~/.claude/statusline-command.sh"
@@ -48,21 +59,10 @@
     "enabled": true,
     "mode": "hold"
   },
+  "showThinkingSummaries": true,
   "skipDangerousModePermissionPrompt": true,
   "theme": "dark",
   "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
-  "voiceEnabled": true,
-  "includeGitInstructions": false,
-  "respectGitignore": false,
-  "showThinkingSummaries": true,
-  "skillOverrides": {
-    "claude-api": "off",
-    "update-config": "off",
-    "init": "off",
-    "review": "off",
-    "keybindings-help": "off",
-    "fewer-permission-prompts": "off",
-    "security-review": "off"
-  }
+  "voiceEnabled": true
 }
