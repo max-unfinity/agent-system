@@ -45,7 +45,7 @@
       "Bash(* install *)"
     ]
   },
-  "model": "opus",
+  "model": "claude-opus-4-6",
   "skillOverrides": {
     "claude-api": "off",
     "update-config": "off",
