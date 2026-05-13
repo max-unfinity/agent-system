@@ -20,7 +20,7 @@ model: sonnet
 
 | Purpose | Path |
 |---------|------|
-| User MCP servers | `~/.claude.json` → key `mcpServers` |
+| User MCP servers | `~/.mcp.json` (or `~/.claude.json`) → key `mcpServers` |
 | Project MCP servers | `.mcp.json` at project root → key `mcpServers` |
 | User permissions | `~/.claude/settings.json` → key `permissions` |
 | Project permissions | `.claude/settings.json` → key `permissions` |
@@ -86,7 +86,7 @@ Edit `permissions` in the appropriate `settings.json`. Add rules to `allow` or `
     "my-server": {
       "type": "stdio",
       "command": "python3",
-      "args": ["~/mcp-servers/my-server/main.py"],
+      "args": ["mcp-servers/my-server/main.py"],
       "env": {
         "API_KEY": "${MY_API_KEY}"
       }

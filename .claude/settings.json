@@ -13,7 +13,9 @@
       "Edit(~/mcp-servers/**)",
       "Skill(start-claude)",
       "Bash(tmux *)",
-      "Bash(sleep *)"
+      "Bash(sleep *)",
+      "mcp__telegram__send_message",
+      "mcp__telegram__send_file"
     ],
     "deny": [
       "mcp__claude_ai_Asana__authenticate",
