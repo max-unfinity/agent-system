@@ -1,5 +1,9 @@
 {
   "respectGitignore": false,
+  "env": {
+    "VIRTUAL_ENV": "/home/max_eliseev/max-eliseev-venv",
+    "PATH": "/home/max_eliseev/max-eliseev-venv/bin:/home/max_eliseev/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin"
+  },
   "includeGitInstructions": false,
   "permissions": {
     "allow": [
