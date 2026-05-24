@@ -15,6 +15,7 @@
 !.claude/CLAUDE.md
 !mcp-servers/
 !mcp-servers/**
+!backlog.md
 
 package-lock.json
 node_modules

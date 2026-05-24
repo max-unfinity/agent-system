@@ -56,14 +56,14 @@
     "init": "off",
     "review": "off",
     "keybindings-help": "off",
-    "fewer-permission-prompts": "off",
+    "fewer-permission-prompts": "user-invocable-only",
     "security-review": "off"
   },
   "statusLine": {
     "type": "command",
     "command": "bash ~/.claude/statusline-command.sh"
   },
-  "effortLevel": "high",
+  "effortLevel": "medium",
   "voice": {
     "enabled": true,
     "mode": "hold"
