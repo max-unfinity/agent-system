@@ -6,6 +6,7 @@
   },
   "includeGitInstructions": false,
   "permissions": {
+    "defaultMode": "acceptEdits",
     "allow": [
       "Read",
       "Bash(docker*)",
