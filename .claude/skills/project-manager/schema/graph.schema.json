@@ -1,0 +1,57 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PMKit Task Graph",
+  "description": "Source of truth for a project's task DAG. The runner topo-sorts this; render_graph turns it into a mermaid PNG for review.",
+  "type": "object",
+  "required": ["project", "roadmap_id", "tasks"],
+  "additionalProperties": false,
+  "properties": {
+    "project": {
+      "type": "string",
+      "description": "Project name (matches CLAUDE.md)."
+    },
+    "roadmap_id": {
+      "type": "string",
+      "pattern": "^[0-9]{3}$",
+      "description": "Three-digit roadmap id, e.g. \"001\"."
+    },
+    "tasks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "file", "deps"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[0-9]{3}$",
+            "description": "Stable task id, e.g. \"001\". Identity only — NOT execution order."
+          },
+          "name": {
+            "type": "string",
+            "description": "Short kebab-case name; used in file names."
+          },
+          "file": {
+            "type": "string",
+            "description": "Path to the task spec, e.g. agents/tasks/001-setup-environment.md"
+          },
+          "deps": {
+            "type": "array",
+            "items": { "type": "string", "pattern": "^[0-9]{3}$" },
+            "description": "Task ids that must finish (status: success) before this one starts. Empty = root."
+          },
+          "model": {
+            "type": "string",
+            "description": "Optional model override for this task's worker, e.g. \"claude-sonnet-4-6\". Omit to use the runner's default."
+          },
+          "effort": {
+            "type": "string",
+            "enum": ["low", "medium", "high", "xhigh", "max"],
+            "description": "Optional effort/reasoning depth for this task's worker. Omit to use the runner's default."
+          }
+        }
+      }
+    }
+  }
+}
