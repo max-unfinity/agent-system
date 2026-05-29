@@ -2,10 +2,11 @@
 """Telegram Bot API helper for the runner.
 
 The runner is plain code, so it cannot use the Telegram MCP (that's exposed to
-LLM agents only). It talks to the Bot API directly. Requires env vars:
+LLM agents only). It talks to the Bot API directly.
 
-    TELEGRAM_BOT_TOKEN   the bot token from @BotFather
-    TELEGRAM_CHAT_ID     the chat/user id to send to
+Credentials are loaded from (in order):
+  1. Environment vars TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID
+  2. The .secrets file next to the skill root
 
 Used for: sending the final report as a document, and crash/failure alerts.
 """
@@ -17,14 +18,34 @@ from pathlib import Path
 import requests
 
 _API = "https://api.telegram.org/bot{token}/{method}"
+_SECRETS = Path(__file__).resolve().parent.parent / ".secrets"
+
+
+def _load_secrets() -> dict[str, str]:
+    if not _SECRETS.exists():
+        return {}
+    kv = {}
+    for line in _SECRETS.read_text().splitlines():
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        if "=" in line:
+            k, v = line.split("=", 1)
+            kv[k.strip()] = v.strip()
+    return kv
 
 
 def _creds() -> tuple[str, str]:
     token = os.environ.get("TELEGRAM_BOT_TOKEN")
     chat = os.environ.get("TELEGRAM_CHAT_ID")
     if not token or not chat:
+        secrets = _load_secrets()
+        token = token or secrets.get("TELEGRAM_BOT_TOKEN")
+        chat = chat or secrets.get("TELEGRAM_CHAT_ID")
+    if not token or not chat:
         raise RuntimeError(
-            "Telegram not configured: set TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID"
+            "Telegram not configured: set TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID "
+            "in env or in .secrets"
         )
     return token, chat
 

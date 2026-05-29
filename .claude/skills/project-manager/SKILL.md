@@ -27,8 +27,7 @@ Load these as needed — don't read them all upfront:
 |------|-------------|
 | [schema/graph.schema.json](schema/graph.schema.json) | Writing or validating a task-graph YAML |
 | [schema/example.graph.yaml](schema/example.graph.yaml) | Need an example of the graph format |
-| [schema/report.template.md](schema/report.template.md) | Explaining report format to the user |
-| [templates/agents/instructions.md](templates/agents/instructions.md) | Reviewing the worker sub-agent contract |
+| [templates/agents/instructions.md](templates/agents/instructions.md) | Reviewing the worker sub-agent contract (phases, report format, ADR format) |
 | [scripts/runner.py](scripts/runner.py) | Need runner CLI flags beyond the basics documented below (read its argparse block) |
 
 ## The flow

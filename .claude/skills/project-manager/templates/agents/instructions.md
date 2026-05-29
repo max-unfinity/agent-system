@@ -26,7 +26,13 @@ Do the work. Then **verify it** — run it, test it, sanity-check the output. A 
 Write docs for anything you built or learned (new APIs, external findings from web search/fetch, the design of what you produced) into `docs/`. Add one line per new doc to `docs/INDEX.md` (filename + description). If you built, write the usage, API, how to launch it or test. If you researched something, summarise the new knowledge you learnt, be specific and answer how it can be applied or used later.
 
 ### 5 — Record decisions (ADR)
-For each non-trivial technical decision, write an Architecture Decision Record: `agents/adr/<NNNN>-<slug>.md` with three sections — **Context**, **Decision** (why? are there trade-offs?), **Consequences**. These are collated into the project's final report, so they must stand alone. Reference them in your report.
+For each non-trivial technical decision, write an Architecture Decision Record to `agents/adr/<NNN>-<slug>.md` (number sequentially across the project, not per-task). Each ADR must stand alone — it gets collated into the final project report. Structure:
+
+- **Context** — what situation or requirement prompted the decision.
+- **Decision** — what you chose and why. State the alternatives you considered and the trade-offs.
+- **Consequences** — what follows from this decision: benefits, costs, risks, follow-up work (brief summary).
+
+Reference each ADR you write in your report (Phase 6).
 
 ### 6 — Report & reflect
 Write `agents/reports/<id>-<name>.md`. Start with YAML frontmatter:
@@ -37,4 +43,6 @@ status: success
 ---
 ```
 
-Set `status: success` **only** if the task is fully done and verified; otherwise `failed`. Below the frontmatter, reflect freely (see the report template): what you did, what was hard, what you solved, what you couldn't, any insights and unexpected things, and links to your ADRs.
+Set `status: success` **only** if the task is fully done and verified; otherwise `failed`.
+
+Below the frontmatter, reflect freely in reporting style: what you did (summary), what was hard and requred multiple attempts, what you solved, what you couldn't, any insights and unexpected things, decisions made, and links to your ADRs (e.g. `agents/adr/003-chose-fastapi.md`).
