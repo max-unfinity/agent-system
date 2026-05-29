@@ -1,7 +1,6 @@
 ---
 name: skill-manager
 description: Create, modify, or remove a Claude Code skill, use when the user asks to work with your skills.
-disable-model-invocation: true
 allowed-tools: Bash Read Write Edit
 argument-hint: <create|modify|remove> [skill-name]
 ---

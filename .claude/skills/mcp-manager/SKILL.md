@@ -1,7 +1,6 @@
 ---
 name: mcp-manager
 description: Add, remove, generate, or configure MCP servers and permissions in Claude Code. Use when user ask to work with MCPs.
-disable-model-invocation: true
 allowed-tools: Bash, Read, Write, Edit
 effort: high
 model: sonnet

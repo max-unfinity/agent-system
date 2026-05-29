@@ -2,11 +2,10 @@
   "respectGitignore": false,
   "env": {
     "VIRTUAL_ENV": "/home/max_eliseev/max-eliseev-venv",
-    "PATH": "/home/max_eliseev/max-eliseev-venv/bin:/home/max_eliseev/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin"
+    "PATH": "/home/max_eliseev/.nvm/versions/node/v20.20.2/bin:/home/max_eliseev/max-eliseev-venv/bin:/home/max_eliseev/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin"
   },
   "includeGitInstructions": false,
   "permissions": {
-    "defaultMode": "acceptEdits",
     "allow": [
       "Read",
       "Bash(docker*)",
@@ -48,9 +47,10 @@
       "Bash(docker push *)",
       "Bash(git push *)",
       "Bash(* install *)"
-    ]
+    ],
+    "defaultMode": "acceptEdits"
   },
-  "model": "claude-opus-4-6",
+  "model": "claude-opus-4-8",
   "skillOverrides": {
     "claude-api": "off",
     "update-config": "off",
