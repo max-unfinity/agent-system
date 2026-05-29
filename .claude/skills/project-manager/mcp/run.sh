@@ -10,4 +10,4 @@ export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
 
 export PYTHONPATH="$SKILL_DIR/scripts${PYTHONPATH:+:$PYTHONPATH}"
 
-exec python3 "$SKILL_DIR/scripts/render_server.py"
+exec python3 "$SKILL_DIR/mcp/render_server.py"

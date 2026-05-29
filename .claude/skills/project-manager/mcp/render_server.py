@@ -25,7 +25,7 @@ from graph_utils import load_and_validate, to_mermaid
 
 mcp = FastMCP("pmkit-render")
 
-PUPPETEER_CFG = Path(__file__).resolve().parent.parent / "mcp" / "puppeteer-config.json"
+PUPPETEER_CFG = Path(__file__).resolve().parent / "puppeteer-config.json"
 
 
 def _write_mmd(roadmap_path: str) -> Path:
