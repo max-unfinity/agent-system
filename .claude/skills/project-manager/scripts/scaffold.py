@@ -20,7 +20,6 @@ DIRS = [
     "agents/roadmaps",
     "agents/tasks",
     "agents/reports",
-    "agents/adr",
     "docs",
 ]
 
@@ -51,6 +50,9 @@ def main() -> None:
 
     stamp(TEMPLATES / "agents" / "instructions.md",
           root / "agents" / "instructions.md", overwrite=args.force)
+
+    stamp(TEMPLATES / "agents" / "decisions.md",
+          root / "agents" / "decisions.md", overwrite=False)
 
     stamp(TEMPLATES / "docs" / "INDEX.md",
           root / "docs" / "INDEX.md", overwrite=False)

@@ -25,14 +25,12 @@ Do the work. Then **verify it** — run it, test it, sanity-check the output. A 
 ### 4 — Document
 Write docs for anything you built or learned (new APIs, external findings from web search/fetch, the design of what you produced) into `docs/`. Add one line per new doc to `docs/INDEX.md` (filename + description). If you built, write the usage, API, how to launch it or test. If you researched something, summarise the new knowledge you learnt, be specific and answer how it can be applied or used later.
 
-### 5 — Record decisions (ADR)
-For each non-trivial technical decision, write an Architecture Decision Record to `agents/adr/<NNN>-<slug>.md` (number sequentially across the project, not per-task). Each ADR must stand alone — it gets collated into the final project report. Structure:
+### 5 — Record decisions
+For each non-trivial technical decision, **append one bullet** to `agents/decisions.md` — do not rewrite or reorder the existing entries. Each bullet is a single line of 2-4 sentences: what you decided and *why* (the reasoning / trade-off), in the same terse style as `docs/INDEX.md`. Do **not** create separate files or write long Context/Decision/Consequences sections. Example:
 
-- **Context** — what situation or requirement prompted the decision.
-- **Decision** — what you chose and why. State the alternatives you considered and the trade-offs.
-- **Consequences** — what follows from this decision: benefits, costs, risks, follow-up work (brief summary).
-
-Reference each ADR you write in your report (Phase 6).
+```
+- Chose FastAPI over Flask for the API — native async fits the streaming endpoints and request validation is built-in, saving a dependency.
+```
 
 ### 6 — Report & reflect
 Write `agents/reports/<id>-<name>.md`. Start with YAML frontmatter:
@@ -43,6 +41,9 @@ status: success
 ---
 ```
 
-Set `status: success` **only** if the task is fully done and verified; otherwise `failed`.
+Set the `status` to:
+- **`success`** — task fully done and verified. (Default for ordinary tasks.)
+- **`failed`** — you could not complete the work correctly.
+- **`review`** — use this **only if your prompt told you this is a review task**: the work is done and self-verified, but a human must validate it before the project continues. Do not use `review` otherwise.
 
-Below the frontmatter, reflect freely in reporting style: what you did (summary), what was hard and requred multiple attempts, what you solved, what you couldn't, any insights and unexpected things, decisions made, and links to your ADRs (e.g. `agents/adr/003-chose-fastapi.md`).
+Below the frontmatter, reflect freely in reporting style: what you did (summary), what was hard and required multiple attempts, what you solved, what you couldn't, any insights and unexpected things, and the decisions you logged in `agents/decisions.md`. Keep it focused — the PM agent reads this to write a short project summary.

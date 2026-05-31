@@ -99,6 +99,8 @@ def to_mermaid(data: dict) -> str:
     lines = ["graph TD"]
     for t in data["tasks"]:
         label = f'{t["id"]} {t["name"]}'.replace('"', "'")
+        if t.get("review"):
+            label += " ⏸ review"
         lines.append(f'  t{t["id"]}["{label}"]')
     for t in data["tasks"]:
         for d in t["deps"]:

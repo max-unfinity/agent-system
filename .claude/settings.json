@@ -74,5 +74,6 @@
   "theme": "dark",
   "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
-  "voiceEnabled": true
+  "voiceEnabled": true,
+  "spinnerTipsEnabled": false
 }

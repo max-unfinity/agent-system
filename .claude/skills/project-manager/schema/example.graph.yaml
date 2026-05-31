@@ -1,7 +1,7 @@
 # Example task graph. Demonstrates a diamond: 002 and 003 run in parallel
 # after 001 finishes; 004 waits for BOTH. Lives at agents/roadmaps/<roadmap_id>-<name>.yaml
 #
-# model and effort are optional per-task overrides (omit to use the runner's default).
+# model, effort, and review are optional per-task fields:
 project: example-project
 roadmap_id: "001"
 tasks:
@@ -9,6 +9,7 @@ tasks:
     name: setup-environment
     file: agents/tasks/001-setup-environment.md
     deps: []
+    model: "claude-sonnet-4-6"   # simple/mechanical -> sonnet
     effort: low
 
   - id: "002"
@@ -20,10 +21,11 @@ tasks:
     name: train-baseline-model
     file: agents/tasks/003-train-baseline-model.md
     deps: ["001"]
-    model: "claude-opus-4-6"
+    model: "claude-opus-4-8"
     effort: high
 
   - id: "004"
     name: evaluate-and-report
     file: agents/tasks/004-evaluate-and-report.md
     deps: ["002", "003"]
+    review: true   # user signs off on the final eval before the project wraps

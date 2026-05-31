@@ -27,8 +27,10 @@ Load these as needed — don't read them all upfront:
 |------|-------------|
 | [schema/graph.schema.json](schema/graph.schema.json) | Writing or validating a task-graph YAML |
 | [schema/example.graph.yaml](schema/example.graph.yaml) | Need an example of the graph format |
-| [templates/agents/instructions.md](templates/agents/instructions.md) | Reviewing the worker sub-agent contract (phases, report format, ADR format) |
+| [templates/agents/instructions.md](templates/agents/instructions.md) | Reviewing the worker sub-agent contract (phases, report format, decisions log, review status) |
 | [scripts/runner.py](scripts/runner.py) | Need runner CLI flags beyond the basics documented below (read its argparse block) |
+| [scripts/status.py](scripts/status.py) | Health-checking a live run (lifecycle, sessions, per-task state, log tail) |
+| [scripts/finalize.py](scripts/finalize.py) | Tearing down sessions after the user approves the final report |
 
 ## The flow
 
@@ -41,7 +43,10 @@ Work with the user to:
 2. Enumerate **tasks**. Split large/fuzzy ones into smaller, concrete ones.
 3. **Reduce uncertainty**: for each task, drive out unknowns — inputs, outputs, acceptance criteria, tools, data/model locations, edge cases. Keep going until each task is clear enough for a sub-agent to execute without coming back.
 4. Establish **dependencies**: which tasks must finish before which, and which can run in parallel.
-5. For each task, decide **model** and **effort**. Defaults are **claude-opus-4-8 / effort medium**; only override when a task clearly warrants it (e.g. a simple file-copy task can use sonnet/low; a complex design task might need opus/xhigh).
+5. For each task, decide **model** and **effort**. Defaults are **claude-opus-4-8 / effort medium**. Tune per task:
+   - Simple / mechanical tasks, writing summaries, boilerplate, straightforward scripting → use **`claude-sonnet-4-6`**, often with `effort: medium` or `low`. Sonnet good for anything that doesn't need deep reasoning.
+   - **Complex / design / research tasks** → keep `claude-opus-4-8`, and raise effort (`high`/`xhigh`/`max`) when the task genuinely warrants deeper reasoning.
+6. Decide which tasks need **human validation** of their output before the project proceeds (e.g. a design or a destructive/irreversible step). Mark those as **review tasks** (`review: true` in the graph) — see Phase 2.
 
 Gate: user confirms the roadmap.
 
@@ -66,8 +71,9 @@ Gate: user confirms the roadmap.
        deps: ["001"]
        model: "claude-opus-4-8"
        effort: high
+       review: true
    ```
-   Ids are identity only, not execution order. `deps` defines order; tasks with no path between them run in parallel. `model` and `effort` are optional — omit to use the runner's default (opus-4-8 / medium).
+   Ids are identity only, not execution order. `deps` defines order; tasks with no path between them run in parallel. `model`, `effort`, and `review` are optional — omit `model`/`effort` to use the runner's default (opus-4-8 / medium); omit `review` (default false) unless the task's output must be validated by the user before dependents start (see Phase 4 — Review tasks).
 3. **Render and review**: call the `render_graph_png` MCP tool on the YAML. It validates the graph and returns a PNG path. Use `render_graph_mmd` only if the user wants diffable text. Send the PNG via the **Telegram MCP**.
 4. Iterate until the user **approves**.
 
@@ -75,7 +81,7 @@ Gate: user confirms the roadmap.
 
 1. **Write `CLAUDE.md`** in the project root from scratch (see rules below).
 2. **Write one task file per node** to `agents/tasks/<id>-<name>.md` (see rules below).
-3. Confirm `docs/INDEX.md` and `agents/instructions.md` exist (scaffold stamps them).
+3. Confirm `docs/INDEX.md`, `agents/decisions.md`, and `agents/instructions.md` exist (scaffold stamps them).
 4. Create extra directories if needed; record layout in CLAUDE.md.
 
 ### Phase 4 — Execution & monitoring
@@ -99,30 +105,71 @@ Surface when relevant:
 
 #### Startup health check
 
-- Verify is the tmux session alive.
-- Read `agents/.runner/runner.log` — does it show a successful first tick?
+After launching, run the health-check script — it confirms everything is OK in one shot:
+```
+python $SKILL_DIR/scripts/status.py --project <project-dir> --roadmap agents/roadmaps/<NNN>-<name>.yaml
+```
+A healthy start shows `runner lifecycle: running`, the `pmkit-runner` session ALIVE, and a clean first tick in the log tail. Re-run it any time you want a snapshot. If the session is already dead or the log shows an error, go to **Crash recovery**.
 
-If the session is already dead or the log shows an error, go to **Crash recovery** below.
+#### Arm the run monitor
 
-#### Arm the crash monitor
-
-Once the runner is stable, arm a persistent Monitor to detect crashes for the rest of the session:
+Once the runner is stable, arm one persistent Monitor for the rest of the session. It distinguishes a **clean finish** from a **crash**, and surfaces tasks that need your **validation** — emitting at most a handful of events and then exiting on the terminal one:
 ```
 Monitor:
-  description: "pmkit runner crash watch"
+  description: "pmkit run watch (done / dead / review)"
   persistent: true
   command: |
-    LOG="<project-dir>/agents/.runner/runner.log"
+    PROJ="<project-dir>"
+    LOG="$PROJ/agents/.runner/runner.log"
+    STATUS="$PROJ/agents/.runner/status"
+    REPORTS="$PROJ/agents/reports"
+    declare -A seen
     while true; do
       if ! tmux has-session -t pmkit-runner 2>/dev/null; then
-        echo "RUNNER_DEAD"
-        tail -30 "$LOG" 2>/dev/null
+        if [ "$(cat "$STATUS" 2>/dev/null)" = "complete" ]; then
+          echo "RUNNER_DONE"
+        else
+          echo "RUNNER_DEAD"; tail -30 "$LOG" 2>/dev/null
+        fi
         break
       fi
+      for r in "$REPORTS"/*.md; do
+        [ -e "$r" ] || continue
+        if head -5 "$r" | grep -q '^status: review' && [ -z "${seen[$r]}" ]; then
+          seen[$r]=1; echo "REVIEW_PENDING $r"
+        fi
+      done
       sleep 15
     done
 ```
-This fires exactly once — when the tmux session dies — and includes the last 30 lines of the log. On receiving this notification, go to **Crash recovery**.
+Why this matters: the runner writes its lifecycle to `agents/.runner/status` (`running` → `complete`). A clean finish leaves `complete`; a crash/kill leaves it at `running`. So a vanished session **with** `status: complete` is `RUNNER_DONE` (success), and only a vanished session **without** it is a real `RUNNER_DEAD`. This is the fix for the old "RUNNER_DEAD on every finish" confusion.
+
+React to each event:
+- **`REVIEW_PENDING <report>`** → a review task is awaiting validation. Go to **Review tasks** below.
+- **`RUNNER_DONE`** → the run finished. Go to **Wrap-up**.
+- **`RUNNER_DEAD`** → go to **Crash recovery**.
+
+#### Review tasks
+
+A task with `review: true` reports `status: review` when its worker is done — the runner then holds its dependents (they stay pending, not blocked) and keeps polling. When you get `REVIEW_PENDING` (or see a `review` task in `status.py`):
+1. Inspect the worker's output and its report `agents/reports/<id>-<name>.md`.
+2. Present it to the user and get their verdict.
+3. **Approve** → edit the report frontmatter `status: review` → `status: success`. The runner picks it up next tick and launches the dependents. **Reject** → set `status: failed` (dependents get blocked), or send work back by deleting the report and relaunching that task.
+
+The runner stays alive while any task is in review.
+
+#### Wrap-up (on RUNNER_DONE)
+
+On completion:
+1. Read `agents/.runner/summary.json` (machine status: per-task state + counts), skim the task reports under `agents/reports/`, and `agents/decisions.md`.
+2. Write a **brief** final report to `agents/roadmaps/<NNN>-final-report.md`: a short summary of what got built, the per-task outcome (note any failed/blocked), key decisions, and anything the user should know. Keep it tight — a few short paragraphs, highlighting important findings.
+3. Send the file to the user via the **Telegram MCP** and present it in-session.
+4. **Wait for the user to approve the final report.**
+5. Once approved, tear everything down by running the script:
+   ```
+   python $SKILL_DIR/scripts/finalize.py --project <project-dir>
+   ```
+   This sweeps any `pmkit-*` tmux sessions and is the single deliberate teardown point — also where future post-run steps (archiving, packaging, deploy) would go.
 
 #### Crash recovery
 
@@ -131,7 +178,7 @@ Up to 3 attempts. On each crash:
 2. Diagnose the root cause.
 3. Apply the fix.
 4. Relaunch the runner (same launch command — the log file is overwritten).
-5. Re-arm the Monitor.
+5. Re-run the startup health check and re-arm the Monitor.
 
 After 3 failed attempts, stop and report the issue to the user with the log contents and your investigations.
 

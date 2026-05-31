@@ -11,7 +11,7 @@ Standing policy for ad-hoc Claude sessions (separate from the `claude-remote` sy
 ## Default command
 
 ```
-tmux new-session -d -s <session-name> "claude --verbose --remote-control <session-name>"
+tmux new-session -d -s <session-name> "bash -lc 'claude --verbose --remote-control <session-name>'"
 ```
 
 Then, after a 2-second sleep, send Enter to dismiss the initial trust-folder prompt:
