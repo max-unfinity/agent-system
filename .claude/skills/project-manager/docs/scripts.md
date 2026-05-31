@@ -2,9 +2,9 @@
 
 All live in `scripts/`. `runner.py` has its own doc (`runner.md`); this covers the rest. They share one dependency note (below).
 
-## Shared dependency / environment note
+## Shared dependency note
 
-`runner.py`, `status.py`, and `render_server.py` import `graph_utils`, which imports `yaml` and `jsonschema`; `notify.py` imports `requests`. These are **not** in the system Python. They live in the venv created by `mcp/setup.sh` (default `$HOME/max-eliseev-venv`), which is put on PATH via `~/.bashrc` / `~/.claude/settings.json` env. `status.py` and `finalize.py` `import` from `runner.py`/`graph_utils.py`, so run them with the **same interpreter as the runner**. `finalize.py` itself only uses the stdlib, but keep the habit. (`requirements.txt` pins `pyyaml`, `jsonschema`, `requests`, and `mcp`.)
+`graph_utils` (imported by `runner.py`, `status.py`, `render_server.py`) needs `yaml`+`jsonschema`; `notify.py` needs `requests` — none in system Python. They're in the `mcp/setup.sh` venv (default `$HOME/max-eliseev-venv`). `status.py`/`finalize.py` import from `runner.py`/`graph_utils.py`, so run them with the **same interpreter as the runner** (`finalize.py` is stdlib-only, but keep the habit). See `development.md`.
 
 ## `scaffold.py` — create a project skeleton
 

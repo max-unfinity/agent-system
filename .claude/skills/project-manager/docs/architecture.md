@@ -1,26 +1,14 @@
 # PMKit Architecture
 
-PMKit turns a project into a dependency graph of tasks and executes each task as a Claude worker sub-agent, with a human gating the important moments. There are two distinct actors with a deliberate division of labour.
-
-## The two actors
+PMKit turns a project into a dependency graph and executes each task as a Claude worker sub-agent, with a human gating the important moments. Three actors, with a deliberate split:
 
 | Actor | What it is | Responsibility |
 |-------|-----------|----------------|
-| **PM agent** | A Claude session running `SKILL.md` | All *judgment*: planning, reducing uncertainty, writing specs, human gating, monitoring, crash recovery, writing the final report. |
-| **Runner** | A plain Python process (`scripts/runner.py`) | All *mechanical execution*: derive which tasks are ready, launch workers, track completion. **No LLM calls** — pure control flow. |
+| **PM agent** | Claude session running `SKILL.md` | All *judgment*: planning, specs, human gating, monitoring, crash recovery, final report. |
+| **Runner** | Plain Python (`scripts/runner.py`) | All *mechanical execution*: derive ready tasks, launch workers, track completion. **No LLM calls.** |
+| **Worker** | Claude session spawned per task | Does one task; contract in `worker-contract.md`. |
 
-The key idea: keep the deterministic parts deterministic. The runner never needs to "decide" anything subjective, so it can be plain code that's trivial to reason about and restart. Everything requiring intelligence lives in the PM agent or in the worker sub-agents.
-
-A third actor, the **worker sub-agent**, is an interactive Claude session the runner spawns per task; its contract is `worker-contract.md`.
-
-## The four-phase flow (PM agent)
-
-Defined in `SKILL.md`, each phase gated on explicit user confirmation:
-
-1. **Roadmap** (conversation only) — name the goal, enumerate tasks, drive out unknowns, set dependencies, pick model/effort per task, flag review tasks.
-2. **Task Graph** — scaffold the project, write the roadmap YAML, render + validate it (via the `pmkit-render` MCP), iterate until approved.
-3. **Preparation** — write `CLAUDE.md` (shared context) and one task file per node.
-4. **Execution & monitoring** — launch the runner in tmux, health-check, arm a Monitor, handle review/done/crash events, write the final report, finalize.
+The point: keep the deterministic part deterministic — the runner decides nothing subjective, so it's trivial to reason about and restart. The PM's operational flow (four gated phases, launch/monitor/wrap-up/crash-recovery, CLAUDE.md & task-file rules) lives **only in `SKILL.md`**; these docs cover the internals beneath it.
 
 ## Generated project layout
 
@@ -77,4 +65,4 @@ PM agent ──reads──> summary.json + reports + decisions.md ──writes�
 PM agent ──runs──> finalize.py (teardown)
 ```
 
-See `runner.md`, `task-graph.md`, `worker-contract.md`, and `monitoring-and-lifecycle.md` for each piece.
+See `runner.md`, `task-graph.md`, and `worker-contract.md` for each piece; `SKILL.md` for how the PM drives the run end to end.

@@ -62,7 +62,7 @@ REVIEW counts as active so the loop keeps polling while a task waits for the use
 - `running` — written at startup.
 - `complete` — written after a clean finish.
 
-If the process crashes or is killed, the file is **left at `running`** (or absent). So: a vanished `pmkit-runner` session with `status: complete` is a clean finish; anything else is a real crash. This is what lets the Monitor tell `RUNNER_DONE` from `RUNNER_DEAD` (see `monitoring-and-lifecycle.md`). There is intentionally no separate `crashed` value — absence of `complete` *is* the crash signal, which is robust to hard kills that can't run cleanup.
+If the process crashes or is killed, the file is **left at `running`** (or absent). So: a vanished `pmkit-runner` session with `status: complete` is a clean finish; anything else is a real crash. This is what lets the PM's Monitor tell `RUNNER_DONE` from `RUNNER_DEAD` (Monitor command in `SKILL.md` Phase 4). No separate `crashed` value on purpose — absence of `complete` *is* the crash signal, robust to hard kills that can't run cleanup.
 
 ## Finalization — `finalize()` / `write_summary()`
 
@@ -97,4 +97,4 @@ The PM reads this + the per-task reports + `agents/decisions.md` and writes the 
 
 ## Testing the runner
 
-Because workers are spawned via an external `claude` command, you test the *control flow* by faking reports, not by running real workers. See `development.md` for the full end-to-end dry-run recipe (scaffold → write reports with hand-set statuses → run `--once`/`--dry-run` → assert states). `--dry-run` prints launch commands without spawning; `--once` runs a single tick and exits.
+`--dry-run` prints launch commands without spawning; `--once` runs a single tick. Full control-flow test recipe (fake reports, no real workers) in `development.md`.
