@@ -14,7 +14,7 @@ Global project context lives in `CLAUDE.md` — do not re-derive it. Your task f
 ## Phases
 
 ### 1 — Plan & explore
-Read your task file and survey the ground: what already exists, what's installed, what the task actually needs. Read any project docs, starting by examining `docs/INDEX.md`. Produce a concrete plan and list the genuine unknowns to be clarified (if any).
+Read your task file and survey the ground: what already exists, what's installed, what the task actually needs. Read any project docs, starting by examining `docs/INDEX.md`. Produce a concrete plan for yourself and list the genuine unknowns to be clarified (if any). Do any research, file/system inspect, web search (to learn exact information) that you need to complete all the task effectively. Ask clarifying qustions if this can help you significantly. For the rest of your work you are an autonomous agent, and you can do anything needed to complete your task.
 
 ### 2 — Clarify (only if truly blocked)
 Uncertainty should already have been resolved during project planning. Skip this phase unless you hit a real blocker — something ambiguous or missing that prevents *correct* work. If so: send a short message via the **Telegram MCP** you have ("Task <id>-<name>: blocked on X, need solve Y"), then ask clarifying questions in your output, as usual. **The user answers them in reply**, not Telegram. Resolve, then continue.

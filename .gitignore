@@ -14,10 +14,10 @@
 !.claude/rules/**
 !.claude/user-projects/
 !.claude/user-projects/**
-!.claude/CLAUDE.md
 !mcp-servers/
 !mcp-servers/**
 !backlog.md
+!CLAUDE.md
 
 package-lock.json
 node_modules

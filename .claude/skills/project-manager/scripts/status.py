@@ -57,8 +57,9 @@ def main() -> None:
     workers = [s for s in sessions if s != f"{args.prefix}-runner"]
     print(f"worker sessions alive: {', '.join(workers) if workers else 'none'}")
 
+    roadmap = args.roadmap if args.roadmap.is_absolute() else project / args.roadmap
     try:
-        data = load_and_validate(args.roadmap)
+        data = load_and_validate(roadmap)
     except GraphError as e:
         print(f"\nERROR: invalid roadmap: {e}")
         return
