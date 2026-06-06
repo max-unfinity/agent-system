@@ -62,6 +62,26 @@ def write_run_status(project: Path, status: str) -> None:
     d.mkdir(parents=True, exist_ok=True)
     (d / "status").write_text(status + "\n")
 
+
+def ensure_trusted(project: Path) -> None:
+    """Pre-accept Claude Code's first-run folder-trust dialog for the project.
+    A detached worker hits that prompt before any tool runs and would hang on it
+    forever (--dangerously-skip-permissions skips tool prompts, not this gate).
+    Trust lives in ~/.claude.json under projects[<abs>].hasTrustDialogAccepted."""
+    cfg = Path.home() / ".claude.json"
+    try:
+        data = json.loads(cfg.read_text()) if cfg.exists() else {}
+        entry = data.setdefault("projects", {}).setdefault(str(project), {})
+        if entry.get("hasTrustDialogAccepted") is True:
+            return
+        entry["hasTrustDialogAccepted"] = True
+        entry.setdefault("allowedTools", [])
+        cfg.write_text(json.dumps(data, indent=2))
+        print(f"trust: pre-accepted folder-trust dialog for {project}")
+    except Exception as e:  # never block a run on this
+        print(f"WARNING: could not pre-accept folder trust ({e}); "
+              "workers may hang on the trust prompt", file=sys.stderr)
+
 # Outer shell runs tmux; tmux runs the inner `sh -c` command. "$(cat file)" is
 # safe for arbitrary prompt content (no re-splitting, no quote reinterpretation).
 DEFAULT_LAUNCH = "tmux new-session -d -s {session} -c {cwd} '{claude_cmd} \"$(cat {prompt_file})\"'"
@@ -270,8 +290,9 @@ def main() -> None:
     args = ap.parse_args()
 
     project = args.project.resolve()
+    roadmap = args.roadmap if args.roadmap.is_absolute() else project / args.roadmap
     try:
-        data = load_and_validate(args.roadmap)
+        data = load_and_validate(roadmap)
     except GraphError as e:
         print(f"ERROR: invalid roadmap: {e}", file=sys.stderr)
         sys.exit(1)
@@ -282,6 +303,8 @@ def main() -> None:
         sys.exit(1)
     instructions = instr_path.read_text()
     tasks = data["tasks"]
+
+    ensure_trusted(project)
 
     launched: dict[str, float] = {}
     announced_fail: set[str] = set()

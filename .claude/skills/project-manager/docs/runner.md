@@ -41,6 +41,8 @@ Called every tick. Two stages:
 
 The base command defaults to `claude --dangerously-skip-permissions` — a detached tmux worker that hits a permission prompt would hang silently, so prompts are skipped by design.
 
+`ensure_trusted()` runs once at startup (in `main()`, before the loop): it sets `projects[<abs>].hasTrustDialogAccepted = true` in `~/.claude.json`. Claude Code shows a first-run "trust this folder" dialog that `--dangerously-skip-permissions` does **not** cover, so without this every worker in a fresh project hangs on it.
+
 ## The main loop — `main()`
 
 1. Load + validate the roadmap (`load_and_validate`); exit non-zero on a bad graph.
