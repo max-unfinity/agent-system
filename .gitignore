@@ -1,6 +1,7 @@
 *
 
 !.gitignore
+!.bash_aliases
 !.tmux.conf
 !.claude/
 !.claude/settings.json

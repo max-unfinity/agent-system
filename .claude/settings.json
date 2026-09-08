@@ -64,7 +64,9 @@
     "type": "command",
     "command": "bash ~/.claude/statusline-command.sh"
   },
-  "effortLevel": "medium",
+  "spinnerTipsEnabled": false,
+  "effortLevel": "high",
+  "tui": "default",
   "voice": {
     "enabled": true,
     "mode": "hold"
@@ -74,6 +76,5 @@
   "theme": "dark",
   "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
-  "voiceEnabled": true,
-  "spinnerTipsEnabled": false
+  "voiceEnabled": true
 }
