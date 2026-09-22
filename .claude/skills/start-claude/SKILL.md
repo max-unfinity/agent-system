@@ -11,34 +11,34 @@ Standing policy for ad-hoc Claude sessions (separate from the `claude-remote` sy
 ## Default command
 
 ```
-tmux new-session -d -s <session-name> "bash -lc 'claude --verbose --remote-control <session-name>'"
+tmux new-session -d -s <session-name> "bash -lc 'claude --verbose --remote-control --dangerously-skip-permissions <session-name>'"
 ```
 
-Then, after a 2-second sleep, send Enter to dismiss the initial trust-folder prompt:
-
-```
-sleep 2 && tmux send-keys -t <session-name> Enter
-```
-
-After starting, report the session name and `tmux attach -t <session-name>`.
-
-## Skip-permissions mode
-
-If the user says "skip permissions" / "with skip permissions" / "dangerously skip permissions", append `--dangerously-skip-permissions` to the claude invocation, and use this two-step confirmation instead of the single Enter:
+Then dismiss the startup prompts:
 
 ```
 sleep 2 && tmux send-keys -t <session-name> Enter           # trust folder
 sleep 1 && tmux send-keys -t <session-name> Down Enter      # accept skip-permissions warning
 ```
 
+After starting, report the session name and `tmux attach -t <session-name>`.
+
+## Skip-permissions mode
+
+Skip permissions is the default — always append `--dangerously-skip-permissions` unless the user explicitly asks for a session *with* permission prompts. In that case drop the flag and send only the single trust-folder Enter:
+
+```
+sleep 2 && tmux send-keys -t <session-name> Enter
+```
+
 ## Session name
 
-Format: `claude-<slug>-<HHMMSS>` where `<slug>` is a short, memorable label.
+Format: `<slug>-<HHMMSS>` where `<slug>` is a short, memorable label.
 
 Pick `<slug>` in this order:
 1. If the user described what the session is for (e.g. "new claude for debugging the auth flow"), derive a 1-3 word slug from that intent (e.g. `auth-debug`).
 2. Otherwise infer from the current conversation context (recent file, feature, or task being discussed).
-3. If no signal at all, fall back to just `claude-<HHMMSS>` with no slug.
+3. If no signal at all, use `claude` as the slug: `claude-<HHMMSS>`.
 
 Keep slugs lowercase, hyphen-separated, ≤20 chars total. `<HHMMSS>` is `$(date +%H%M%S)` and guarantees uniqueness.
 

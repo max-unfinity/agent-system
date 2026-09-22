@@ -11,9 +11,8 @@
       "Bash(docker*)",
       "WebFetch",
       "WebSearch",
-      "Write(~/projects/**)",
+      "Write",
       "Edit(~/projects/**)",
-      "Write(~/mcp-servers/**)",
       "Edit(~/mcp-servers/**)",
       "Skill(start-claude)",
       "Bash(tmux *)",
@@ -45,12 +44,11 @@
     ],
     "ask": [
       "Bash(docker push *)",
-      "Bash(git push *)",
-      "Bash(* install *)"
+      "Bash(git push *)"
     ],
     "defaultMode": "acceptEdits"
   },
-  "model": "claude-opus-4-8",
+  "model": "opus",
   "skillOverrides": {
     "claude-api": "off",
     "update-config": "off",
@@ -66,6 +64,17 @@
   },
   "spinnerTipsEnabled": false,
   "effortLevel": "high",
+  "modelSettings": {
+    "claude-opus-4-8": {
+      "effortLevel": "medium"
+    },
+    "claude-opus-5": {
+      "effortLevel": "medium"
+    },
+    "claude-sonnet-5": {
+      "effortLevel": "medium"
+    }
+  },
   "tui": "default",
   "voice": {
     "enabled": true,

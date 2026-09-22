@@ -22,3 +22,5 @@
 
 package-lock.json
 node_modules
+.claude/skills/synced
+*.pyc
