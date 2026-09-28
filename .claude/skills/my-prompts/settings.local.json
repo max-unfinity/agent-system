@@ -1,0 +1,54 @@
+{
+  "worktree": {
+    "baseRef": "head"
+  },
+  "disabledMcpjsonServers": [
+    "fish-audio",
+    "youtube",
+    "kreuzberg",
+    "pmkit-render"
+  ],
+  "env": {
+    "ENABLE_CLAUDEAI_MCP_SERVERS": "false"
+  },
+  "permissions": {
+    "deny": [
+      "Artifact",
+      "Workflow",
+      "ScheduleWakeup",
+      "SendFeedback",
+      "ShareOnboardingGuide",
+      "ListAgents",
+      "ReportFindings"
+    ]
+  },
+  "skillOverrides": {
+    "docs": "off",
+    "pptx": "off",
+    "docx": "off",
+    "xlsx": "off",
+    "pdf": "off",
+    "google-workspace": "off",
+    "morning": "off",
+    "skill-creator": "off",
+    "import-memory": "off",
+    "dataviz": "off",
+    "artifact-design": "off",
+    "artifact-capabilities": "off",
+    "artifact-diagramming": "off",
+    "schedule": "off",
+    "loop": "off",
+    "workflow-authoring": "off",
+    "comfyui": "off",
+    "anthropic-skills:docs": "off",
+    "anthropic-skills:pptx": "off",
+    "anthropic-skills:docx": "off",
+    "anthropic-skills:xlsx": "off",
+    "anthropic-skills:pdf": "off",
+    "anthropic-skills:google-workspace": "off",
+    "anthropic-skills:morning": "off",
+    "anthropic-skills:skill-creator": "off",
+    "anthropic-skills:import-memory": "off",
+    "code-review": "off"
+  }
+}

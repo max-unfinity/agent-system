@@ -2,7 +2,7 @@
 name: prune
 description: Export a project's past Claude sessions (pruned to the conversation) into one resumable session and start it in tmux, optionally with a prompt.
 argument-hint: "[natural-language request, or --since YYYY-MM-DD] [--user-only] [prompt]"
-disable-model-invocation: true
+disable-model-invocation: false
 ---
 
 # Prune: export past sessions into a fresh tmux session
